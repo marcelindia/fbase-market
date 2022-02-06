@@ -17,21 +17,38 @@ function connectToFirestore() {
 }
 const db = connectToFirestore();
 const seafoodRef = db.collection("seafood");
+const fruitRef = db.collection("fruit");
 
-// app.post("/seafood", (req, res) => {
-//   const db = connectToFirestore();
-//   seafoodRef
-//     .add(req.body)
-//     .then(() => res.send("Seafood Added!"))
-//     .catch(console.error);
-// });
+app.post("/newitem", (req, res) => {
+  const db = connectToFirestore();
+  seafoodRef
+    .add(req.body)
+    .then(() => res.send("Seafood Added!"))
+    .catch(console.error);
+});
 
-// app.patch("/updateItem", (req, res) => {
-//   db.collection("seafood")
-//     .doc("JzQ1sbyDKpXsS7EGnOUb")
-//     .update({ price: "2.99" })
-//     .then(() => res.send("Salmon Updated!"));
-// });
+app.post("/newcol", (req, res) => {
+  const db = connectToFirestore();
+  fruitRef
+    .add(req.body)
+    .then(() => res.send("Fruit Added!"))
+    .catch(console.error);
+});
+
+app.post("/seafood", (req, res) => {
+  const db = connectToFirestore();
+  seafoodRef
+    .add(req.body)
+    .then(() => res.send("Seafood Added!"))
+    .catch(console.error);
+});
+
+app.patch("/updateItem", (req, res) => {
+  db.collection("seafood")
+    .doc("JzQ1sbyDKpXsS7EGnOUb")
+    .update({ price: "2.99" })
+    .then(() => res.send("Salmon Updated!"));
+});
 
 app.get("/coll", (req, res) => {
   seafoodRef
@@ -47,7 +64,22 @@ app.get("/coll", (req, res) => {
     .catch(console.error);
 });
 
+app.get("/fruitcoll", (req, res) => {
+  fruitRef
+    .get()
+    .then((snapshot) => {
+      const fruit = snapshot.docs.map((doc) => {
+        let fruit = doc.data();
+        fruit.id = doc.id;
+        return fruit;
+      });
+      res.status(200).send(fruit);
+    })
+    .catch(console.error);
+});
+
 app.get("/prod/:seafoodId", (req, res) => {
+  // seafoodId without :
   console.log("my param request", req.params);
   const { seafoodId } = req.params;
 
